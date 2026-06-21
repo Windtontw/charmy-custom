@@ -35,7 +35,45 @@ header{padding:14px 20px;border-bottom:1px solid var(--bd);background:#fff;} hea
 .cmpcell{flex:0 0 220px;text-align:center;border:1px solid var(--bd);border-radius:10px;padding:10px;background:#fff;}
 .cmpcell svg{max-width:100%;height:auto;max-height:300px;} .cmpcell .t{font-size:13px;font-weight:700;margin-bottom:6px;}
 .closebtn{float:right;border:none;background:#33333a;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;}
-header{position:relative;}.langbar{position:absolute;top:12px;right:16px;display:flex;gap:6px;}.lang{padding:5px 11px;border:1px solid var(--bd);background:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;}.lang.on{background:#33333a;color:#fff;border-color:#33333a;}.allrow{background:#fff3d6;border-color:#e8c878!important;font-weight:700;}.allrow:hover{background:#ffe9b3!important;}.allrow .regchip{background:linear-gradient(135deg,#ff8fb1,#ffd23f,#9fd4e8)!important;}.speclist{display:flex;flex-direction:column;gap:4px;}.specrow{display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--bd);}.specchip{width:18px;height:18px;border-radius:5px;border:1px solid var(--bd);flex:0 0 auto;}.specname{flex:0 0 92px;font-weight:700;}.specpan{flex:0 0 108px;}.spechex{color:var(--mut);font-size:11px;}</style></head><body>
+header{position:relative;}.langbar{position:absolute;top:12px;right:16px;display:flex;gap:6px;}.lang{padding:5px 11px;border:1px solid var(--bd);background:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;}.lang.on{background:#33333a;color:#fff;border-color:#33333a;}.allrow{background:#fff3d6;border-color:#e8c878!important;font-weight:700;}.allrow:hover{background:#ffe9b3!important;}.allrow .regchip{background:linear-gradient(135deg,#ff8fb1,#ffd23f,#9fd4e8)!important;}.speclist{display:flex;flex-direction:column;gap:4px;}.specrow{display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--bd);}.specchip{width:18px;height:18px;border-radius:5px;border:1px solid var(--bd);flex:0 0 auto;}.specname{flex:0 0 92px;font-weight:700;}.specpan{flex:0 0 108px;}.spechex{color:var(--mut);font-size:11px;}
+/* ===== 手機觸控優化（方向一＋方向二）追加 2026-06 ===== */
+@media (max-width:760px){
+  header{position:static;padding:12px 14px;}
+  header h1{font-size:16px;}
+  .langbar{position:static;justify-content:flex-end;margin-top:8px;}
+  .lang{padding:8px 14px;font-size:14px;}
+  /* 單欄堆疊：娃娃置頂 sticky，操作區在下方捲動 */
+  .wrap{display:block;padding:10px;}
+  .left,.mid,.right{width:100%;max-width:none;min-width:0;float:none;}
+  .left{position:sticky;top:0;z-index:30;margin-bottom:12px;padding:8px;
+        box-shadow:0 6px 14px rgba(0,0,0,.10);}
+  .stage{overflow:hidden;touch-action:none;}
+  .stage svg{max-height:38vh;}
+  .zoomhint{font-size:11px;color:var(--mut);margin-top:4px;}
+  /* 放大觸控目標 ≥44px、消除點擊延遲 */
+  .sw,.tab,.btn,.regrow,.preset,.minibtn,.lang,.schemerow,.allrow,
+  input[type=color],.cur{touch-action:manipulation;}
+  .tab{padding:13px 9px;font-size:15px;}
+  .reglist{max-height:none;overflow:visible;gap:8px;}
+  .regrow{padding:14px 12px;font-size:15px;min-height:48px;}
+  .regchip{width:26px;height:26px;}
+  .sws{gap:10px;}
+  .sw{border-radius:11px;}
+  .sw span{font-size:10px;}
+  .btn{padding:13px;min-width:120px;font-size:14.5px;}
+  .btns{gap:10px;}
+  .preset{padding:12px;font-size:14px;}
+  .minibtn{padding:8px 12px;font-size:13px;}
+  .cur{width:40px;height:40px;}
+  input[type=color]{width:48px;height:40px;}
+  .row{font-size:14px;gap:12px;}
+  /* 彈窗在小螢幕縮邊距 */
+  .overlay{padding:10px;}
+  .cmpwrap{padding:12px;}
+  .cmpcell{flex:0 0 150px;}
+}
+
+</style></head><body>
 <header><div class="langbar"><button class="lang on" data-l="zh">中</button><button class="lang" data-l="en">EN</button><button class="lang" data-l="ja">日</button></div><h1 data-i18n="title">Charmy chan ・ 向量互動上色</h1><p data-i18n="sub">選色後：直接點娃娃部位，或從右側「區塊選單」點該區，都能即時換色。可存配色方案、並排比較、匯出配色表與 SVG／PNG。</p></header>
 <div class="wrap">
   <div class="left">
@@ -211,4 +249,43 @@ document.querySelectorAll('.lang').forEach(b=>b.addEventListener('click',()=>set
 
 let initLang='zh'; try{initLang=localStorage.getItem('charmy_lang')||'zh';}catch(e){}
 setColor('#ffd23f'); buildSVG('cap'); renderPresets(); renderSchemes(); setLang(initLang);
-</script></body></html>
+</script>
+<script>
+/* ===== 娃娃雙指縮放／拖移（僅觸控裝置啟用，不影響桌機與上色邏輯） 2026-06 ===== */
+(function(){
+  var stage=document.getElementById('stage');
+  if(!stage) return;
+  var isTouch=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||('ontouchstart' in window);
+  if(!isTouch) return;
+  var scale=1,tx=0,ty=0,pts=new Map(),startDist=0,startScale=1,startTx=0,startTy=0,panStart=null,moved=false,lastTap=0;
+  function art(){return stage.querySelector('#art');}
+  function apply(){var a=art();if(!a)return;a.style.transformOrigin='center center';a.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';}
+  function reset(){scale=1;tx=0;ty=0;apply();}
+  new MutationObserver(function(){scale=1;tx=0;ty=0;apply();}).observe(stage,{childList:true});
+  stage.addEventListener('pointerdown',function(e){
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===2){var p=[...pts.values()];startDist=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);startScale=scale;startTx=tx;startTy=ty;moved=true;e.preventDefault();}
+    else if(pts.size===1){panStart={x:e.clientX,y:e.clientY,tx:tx,ty:ty};moved=false;}
+  },{passive:false});
+  stage.addEventListener('pointermove',function(e){
+    if(!pts.has(e.pointerId))return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size>=2){var p=[...pts.values()];var d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);if(startDist>0){scale=Math.min(5,Math.max(1,startScale*(d/startDist)));}apply();e.preventDefault();}
+    else if(pts.size===1&&panStart&&scale>1){var dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;tx=panStart.tx+dx;ty=panStart.ty+dy;apply();e.preventDefault();}
+  },{passive:false});
+  function up(e){
+    pts.delete(e.pointerId);
+    if(pts.size<2)startDist=0;
+    if(pts.size===0){if(scale<=1.02){scale=1;tx=0;ty=0;apply();}panStart=null;
+      var now=Date.now();if(now-lastTap<300&&scale>1){reset();}lastTap=now;}
+  }
+  stage.addEventListener('pointerup',up);
+  stage.addEventListener('pointercancel',up);
+  /* 手機操作提示 */
+  var hint=document.createElement('div');hint.className='zoomhint';
+  hint.textContent='雙指縮放娃娃，放大後可拖移、雙擊還原';
+  if(stage.parentNode) stage.parentNode.insertBefore(hint,stage.nextSibling);
+})();
+</script>
+
+</body></html>
