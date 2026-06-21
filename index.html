@@ -48,12 +48,13 @@ header{position:relative;}.langbar{position:absolute;top:12px;right:16px;display
   .left{position:sticky;top:0;z-index:30;margin-bottom:12px;padding:8px;
         box-shadow:0 6px 14px rgba(0,0,0,.10);}
   .stage{overflow:hidden;touch-action:none;}
-  .stage svg{max-height:38vh;}
+  .stage svg{max-height:42vh;}
   .zoomhint{font-size:11px;color:var(--mut);margin-top:4px;}
   /* 放大觸控目標 ≥44px、消除點擊延遲 */
   .sw,.tab,.btn,.regrow,.preset,.minibtn,.lang,.schemerow,.allrow,
   input[type=color],.cur{touch-action:manipulation;}
-  .tab{padding:13px 9px;font-size:15px;}
+  .tabs{position:absolute;top:10px;right:10px;z-index:6;margin:0;width:auto;gap:6px;}
+  .tab{flex:0 0 auto;padding:7px 14px;font-size:13px;border-radius:18px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.12);}
   .reglist{max-height:none;overflow:visible;gap:8px;}
   .regrow{padding:14px 12px;font-size:15px;min-height:48px;}
   .regchip{width:26px;height:26px;}
