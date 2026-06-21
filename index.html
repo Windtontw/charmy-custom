@@ -224,7 +224,7 @@ function specRows(){const rows=[];REG.forEach((g,k)=>{const hex=g.paths[0].getAt
 function specCSV(){const head=t('spec_head');const esc=v=>'"'+String(v).replace(/"/g,'""')+'"';return '﻿'+[head,...specRows()].map(r=>r.map(esc).join(',')).join('\r\n');}
 function specText(){return t('spec_title')+'\n'+specRows().map(r=>r[0]+' / '+r[1]+' / '+r[2]+'：'+(r[3]||'—')+'｜'+r[4]+'（≈'+r[5]+'）').join('\n');}
 
-document.getElementById('copyspec').addEventListener('click',()=>{const txt=specText();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>readout.textContent=t('m_copied'),()=>readout.textContent=t('m_copyfail'));}else{readout.textContent=t('m_nocopy');}});
+
 function renderSpec(){var box=document.getElementById('specbox');if(!box)return;var h='';REG.forEach(function(g,k){var hex=g.paths[0].getAttribute('fill');var nh=nearestHex(hex);h+='<div class="specrow"><span class="specchip" style="background:'+hex+'"></span><span class="specname">'+partName(k)+'</span><span class="specpan">'+(g.pantone||'—')+'</span><span class="spechex">'+String(hex).toUpperCase()+' ≈ '+swName(nh,LANG)+'</span></div>';});box.innerHTML=h;}
 document.querySelectorAll('.lang').forEach(function(b){b.addEventListener('click',function(){setTimeout(renderSpec,0);});});
 
