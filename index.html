@@ -36,31 +36,38 @@ header{padding:14px 20px;border-bottom:1px solid var(--bd);background:#fff;} hea
 .cmpcell svg{max-width:100%;height:auto;max-height:300px;} .cmpcell .t{font-size:13px;font-weight:700;margin-bottom:6px;}
 .closebtn{float:right;border:none;background:#33333a;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;}
 header{position:relative;}.langbar{position:absolute;top:12px;right:16px;display:flex;gap:6px;}.lang{padding:5px 11px;border:1px solid var(--bd);background:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;}.lang.on{background:#33333a;color:#fff;border-color:#33333a;}.allrow{background:#fff3d6;border-color:#e8c878!important;font-weight:700;}.allrow:hover{background:#ffe9b3!important;}.allrow .regchip{background:linear-gradient(135deg,#ff8fb1,#ffd23f,#9fd4e8)!important;}.speclist{display:flex;flex-direction:column;gap:4px;}.specrow{display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--bd);}.specchip{width:18px;height:18px;border-radius:5px;border:1px solid var(--bd);flex:0 0 auto;}.specname{flex:0 0 92px;font-weight:700;}.specpan{flex:0 0 108px;}.spechex{color:var(--mut);font-size:11px;}
-/* ===== 手機觸控優化（方向一＋方向二）追加 2026-06 ===== */
+/* ===== 手機版面：娃娃(窄)＋區塊選單並排、色票移到下方；觸控優化 2026-06 ===== */
 @media (max-width:760px){
-  header{position:static;padding:12px 14px;}
-  header h1{font-size:16px;}
-  .langbar{position:static;justify-content:flex-end;margin-top:8px;}
+  header{position:static;padding:8px 12px;}
+  header h1{font-size:15px;}
+  header p{display:none;}
+  .langbar{position:static;justify-content:flex-end;margin-top:4px;}
   .lang{padding:8px 14px;font-size:14px;}
-  /* 單欄堆疊：娃娃置頂 sticky，操作區在下方捲動 */
-  .wrap{display:block;padding:10px;}
-  .left,.mid,.right{width:100%;max-width:none;min-width:0;float:none;}
-  .left{position:sticky;top:0;z-index:30;margin-bottom:12px;padding:8px;
-        box-shadow:0 6px 14px rgba(0,0,0,.10);}
+  /* 上排兩欄：左娃娃、右區塊選單；色票等移到下方整排 */
+  .wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;align-items:start;}
+  .left{grid-column:1;min-width:0;margin:0;padding:6px;position:relative;background:#fff;border:1px solid var(--bd);border-radius:12px;}
+  .mid{grid-column:2;min-width:0;max-width:none;}
+  .right{grid-column:1 / -1;min-width:0;max-width:none;}
+  /* 款式切換：娃娃右上角小膠囊 */
+  .tabs{position:absolute;top:8px;right:8px;z-index:6;margin:0;width:auto;gap:5px;}
+  .tab{flex:0 0 auto;padding:5px 10px;font-size:12px;border-radius:16px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.12);}
   .stage{overflow:hidden;touch-action:none;}
-  .stage svg{max-height:42vh;}
+  .stage svg{max-height:30vh;}
   .zoomhint{font-size:11px;color:var(--mut);margin-top:4px;}
-  /* 放大觸控目標 ≥44px、消除點擊延遲 */
-  .sw,.tab,.btn,.regrow,.preset,.minibtn,.lang,.schemerow,.allrow,
-  input[type=color],.cur{touch-action:manipulation;}
-  .tabs{position:absolute;top:10px;right:10px;z-index:6;margin:0;width:auto;gap:6px;}
-  .tab{flex:0 0 auto;padding:7px 14px;font-size:13px;border-radius:18px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.12);}
-  .reglist{max-height:none;overflow:visible;gap:8px;}
-  .regrow{padding:14px 12px;font-size:15px;min-height:48px;}
-  .regchip{width:26px;height:26px;}
-  .sws{gap:10px;}
-  .sw{border-radius:11px;}
+  #readout{display:none;}
+  .mid .card{margin:0;padding:8px;}
+  .mid .card h2{font-size:13px;margin-bottom:4px;}
+  .mid .reghead,.mid p{font-size:10px;margin:2px 0;}
+  .reglist{max-height:30vh;overflow:auto;gap:6px;}
+  .regrow{padding:9px 8px;font-size:13px;min-height:44px;}
+  .regchip{width:20px;height:20px;}
+  /* 下方色票放大成 6 欄整排 */
+  .right .card:first-child{margin-bottom:10px;}
+  .sws{grid-template-columns:repeat(6,1fr);gap:8px;}
+  .sw{border-radius:9px;}
   .sw span{font-size:10px;}
+  /* 觸控目標放大、消除點擊延遲 */
+  .sw,.tab,.btn,.regrow,.preset,.minibtn,.lang,.schemerow,.allrow,input[type=color],.cur{touch-action:manipulation;}
   .btn{padding:13px;min-width:120px;font-size:14.5px;}
   .btns{gap:10px;}
   .preset{padding:12px;font-size:14px;}
@@ -68,12 +75,10 @@ header{position:relative;}.langbar{position:absolute;top:12px;right:16px;display
   .cur{width:40px;height:40px;}
   input[type=color]{width:48px;height:40px;}
   .row{font-size:14px;gap:12px;}
-  /* 彈窗在小螢幕縮邊距 */
   .overlay{padding:10px;}
   .cmpwrap{padding:12px;}
   .cmpcell{flex:0 0 150px;}
 }
-
 </style></head><body>
 <header><div class="langbar"><button class="lang on" data-l="zh">中</button><button class="lang" data-l="en">EN</button><button class="lang" data-l="ja">日</button></div><h1 data-i18n="title">Charmy chan ・ 向量互動上色</h1><p data-i18n="sub">選色後：直接點娃娃部位，或從右側「區塊選單」點該區，都能即時換色。可存配色方案、並排比較、匯出配色表與 SVG／PNG。</p></header>
 <div class="wrap">
