@@ -124,7 +124,8 @@ const PART={
 '嘴唇':{zh:'嘴唇',en:'Lips',ja:'唇'},
 '瞳孔/眉/睫':{zh:'瞳孔/眉/睫',en:'Eyes·brows·lashes',ja:'瞳・眉・まつげ'},
 '耳(外)':{zh:'耳(外)',en:'Outer ear',ja:'耳（外）'},
-'耳(內)':{zh:'耳(內)',en:'Inner ear',ja:'耳（内）'}
+'耳(內)':{zh:'耳(內)',en:'Inner ear',ja:'耳（内）'},
+'腮紅':{zh:'腮紅',en:'Blush',ja:'チーク'}
 };
 function partName(k){return (PART[k]&&PART[k][LANG])||k;}
 
@@ -167,15 +168,18 @@ function nearestHex(hex){let best='',bd=1e9;const a=hx(hex);[...document.querySe
 
 const CATCH={"cap":"M1201.8,951.0 L1205.2,951.0 L1207.8,951.8 L1209.2,953.2 L1210.0,955.8 L1210.0,959.2 L1209.2,961.8 L1207.8,963.2 L1205.2,964.0 L1201.8,964.0 L1199.2,963.2 L1197.8,961.8 L1197.0,959.2 L1197.0,955.8 L1197.8,953.2 L1199.2,951.8 Z M1156.8,908.0 L1160.2,908.0 L1163.0,909.0 L1165.0,911.0 L1166.0,913.2 L1166.0,915.8 L1165.0,918.0 L1163.0,920.0 L1160.2,921.0 L1156.8,921.0 L1154.2,920.2 L1152.8,918.8 L1152.0,916.2 L1152.0,912.8 L1152.8,910.2 L1154.2,908.8 Z M852.0,951.0 L856.0,951.0 L858.8,951.8 L860.2,953.2 L861.0,955.8 L861.0,959.2 L860.2,961.8 L858.8,963.2 L856.0,964.0 L852.0,964.0 L849.2,963.2 L847.8,961.8 L847.0,959.2 L847.0,955.8 L847.8,953.2 L849.2,951.8 Z M807.0,908.0 L811.0,908.0 L813.8,908.8 L815.2,910.2 L816.0,912.8 L816.0,916.2 L815.2,918.8 L813.8,920.2 L811.0,921.0 L807.0,921.0 L804.2,920.2 L802.8,918.8 L802.0,916.2 L802.0,912.8 L802.8,910.2 L804.2,908.8 Z","ears":"M796.5,970.0 L799.5,970.0 L801.8,970.8 L803.2,972.2 L804.0,974.5 L804.0,977.5 L803.0,980.0 L801.0,982.0 L799.0,983.0 L797.0,983.0 L795.0,982.0 L793.0,980.0 L792.0,977.5 L792.0,974.5 L792.8,972.2 L794.2,970.8 Z M754.5,932.0 L757.5,932.0 L759.8,932.8 L761.2,934.2 L762.0,936.0 L762.0,938.0 L761.0,940.0 L759.0,942.0 L757.0,943.0 L755.0,943.0 L753.0,942.0 L751.0,940.0 L750.0,938.0 L750.0,936.0 L750.8,934.2 L752.2,932.8 Z M1174.5,970.0 L1177.5,970.0 L1179.8,970.8 L1181.2,972.2 L1182.0,974.5 L1182.0,977.5 L1181.0,980.0 L1179.0,982.0 L1177.0,983.0 L1175.0,983.0 L1173.0,982.0 L1171.0,980.0 L1170.0,977.5 L1170.0,974.5 L1170.8,972.2 L1172.2,970.8 Z M1132.5,932.0 L1135.5,932.0 L1137.8,932.8 L1139.2,934.2 L1140.0,936.0 L1140.0,938.0 L1139.0,940.0 L1137.0,942.0 L1135.0,943.0 L1133.0,943.0 L1131.0,942.0 L1129.0,940.0 L1128.0,938.0 L1128.0,936.0 L1128.8,934.2 L1130.2,932.8 Z"};
 function addCatch(el,key){const NS='http://www.w3.org/2000/svg';const d=CATCH[key];if(!d)return;const cl=document.createElementNS(NS,'path');cl.setAttribute('d',d);cl.setAttribute('fill','#ffffff');cl.setAttribute('stroke','none');cl.setAttribute('data-catchlight','1');el.appendChild(cl);}
+const BLUSH={cap:{l:[782,1158],r:[1194,1158],rx:96,ry:80},ears:{l:[720,1160],r:[1140,1160],rx:96,ry:80}};
+function addBlush(el,key){const NS='http://www.w3.org/2000/svg';const cfg=BLUSH[key];if(!cfg)return;const fp=el.querySelector('#fills [data-region="臉/脖(膚)"]');if(!fp)return;let defs=el.querySelector('defs');if(!defs){defs=document.createElementNS(NS,'defs');el.insertBefore(defs,el.firstChild);}if(!el.querySelector('#blushsoft')){const f=document.createElementNS(NS,'filter');f.setAttribute('id','blushsoft');f.setAttribute('x','-60%');f.setAttribute('y','-60%');f.setAttribute('width','220%');f.setAttribute('height','220%');const gb=document.createElementNS(NS,'feGaussianBlur');gb.setAttribute('stdDeviation','24');f.appendChild(gb);defs.appendChild(f);}let after=fp;[cfg.l,cfg.r].forEach(c=>{const e=document.createElementNS(NS,'ellipse');e.setAttribute('cx',c[0]);e.setAttribute('cy',c[1]);e.setAttribute('rx',cfg.rx);e.setAttribute('ry',cfg.ry);e.setAttribute('data-region','腮紅');e.setAttribute('data-pantone','PANTONE 1895 C');e.setAttribute('fill-opacity','0.72');e.setAttribute('filter','url(#blushsoft)');fp.parentNode.insertBefore(e,after.nextSibling);after=e;});}
 function buildSVG(key){
   const o=SVGS[key];
   stage.innerHTML='<svg id="art" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="'+o.vb+'">'+o.body+'</svg>';
   const el=stage.querySelector('#art'); reglist.innerHTML=''; REG=new Map(); HIST=[];
+  addBlush(el,key);
   const els=[...el.querySelectorAll('#fills [data-region]')];
   els.forEach(p=>{
     const k=p.getAttribute('data-region');
-    const def=(k==='瞳孔/眉/睫')?'#1a1a1a':'#ffffff';
-    p.setAttribute('fill',def); p.setAttribute('stroke',def); p.setAttribute('stroke-width',k==='瞳孔/眉/睫'?'0':'12'); p.setAttribute('stroke-linejoin','round'); p.setAttribute('stroke-linecap','round'); p.setAttribute('data-orig',def);
+    const def=(k==='瞳孔/眉/睫')?'#1a1a1a':(k==='腮紅')?'#f2a7bb':'#ffffff';
+    p.setAttribute('fill',def); if(k==='腮紅'){p.setAttribute('stroke','none');p.setAttribute('stroke-width','0');}else{p.setAttribute('stroke',def); p.setAttribute('stroke-width',k==='瞳孔/眉/睫'?'0':'12');} p.setAttribute('stroke-linejoin','round'); p.setAttribute('stroke-linecap','round'); p.setAttribute('data-orig',def);
     if(!REG.has(k)) REG.set(k,{paths:[],pantone:p.getAttribute('data-pantone')||'',chip:null});
     REG.get(k).paths.push(p);
     p.addEventListener('click',()=>applyGroup(k));
@@ -272,28 +276,4 @@ setColor('#ffd23f'); buildSVG('cap'); renderPresets(); renderSchemes(); setLang(
   new MutationObserver(function(){scale=1;tx=0;ty=0;apply();}).observe(stage,{childList:true});
   stage.addEventListener('pointerdown',function(e){
     pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(pts.size===2){var p=[...pts.values()];startDist=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);startScale=scale;startTx=tx;startTy=ty;moved=true;e.preventDefault();}
-    else if(pts.size===1){panStart={x:e.clientX,y:e.clientY,tx:tx,ty:ty};moved=false;}
-  },{passive:false});
-  stage.addEventListener('pointermove',function(e){
-    if(!pts.has(e.pointerId))return;
-    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(pts.size>=2){var p=[...pts.values()];var d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);if(startDist>0){scale=Math.min(5,Math.max(1,startScale*(d/startDist)));}apply();e.preventDefault();}
-    else if(pts.size===1&&panStart&&scale>1){var dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;tx=panStart.tx+dx;ty=panStart.ty+dy;apply();e.preventDefault();}
-  },{passive:false});
-  function up(e){
-    pts.delete(e.pointerId);
-    if(pts.size<2)startDist=0;
-    if(pts.size===0){if(scale<=1.02){scale=1;tx=0;ty=0;apply();}panStart=null;
-      var now=Date.now();if(now-lastTap<300&&scale>1){reset();}lastTap=now;}
-  }
-  stage.addEventListener('pointerup',up);
-  stage.addEventListener('pointercancel',up);
-  /* 手機操作提示 */
-  var hint=document.createElement('div');hint.className='zoomhint';
-  hint.textContent='雙指縮放娃娃，放大後可拖移、雙擊還原';
-  if(stage.parentNode) stage.parentNode.insertBefore(hint,stage.nextSibling);
-})();
-</script>
-
-</body></html>
+    if(pts.size===2){var p=[...pts.values()];startDist=Math.h
